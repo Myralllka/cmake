@@ -6,12 +6,12 @@ project(${PROJECT_NAME} CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 # Options
-option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors." ON)
-option(ENABLE_PVS_STUDIO "Check using command-line PVS-Studio." ON)
+set(WARNINGS_AS_ERRORS ON)
+set(ENABLE_PVS_STUDIO OFF)
 #! ENABLE_SANITIZERS is the option for the test builds!
 #  Definitely enable it while developing.
 #  Disable it for the production builds and before submitting for grading!
-option(ENABLE_SANITIZERS    "Use sanitizers to detect errors." OFF) 
+set(ENABLE_SANITIZERS OFF) 
 
 #! Build release version if not specified otherwise.
 if (NOT CMAKE_BUILD_TYPE)
