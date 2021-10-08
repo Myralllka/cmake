@@ -15,7 +15,7 @@ set(ENABLE_SANITIZERS OFF)
 
 #! Build release version if not specified otherwise.
 if (NOT CMAKE_BUILD_TYPE)
-	(CMAKE_BUILD_TYPE Release)
+	set(CMAKE_BUILD_TYPE Release)
 endif ()
 
 # Set output directories
