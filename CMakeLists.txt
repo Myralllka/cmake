@@ -15,7 +15,7 @@ set(ENABLE_SANITIZERS OFF)
 
 #! Build release version if not specified otherwise.
 if (NOT CMAKE_BUILD_TYPE)
-	(CMAKE_BUILD_TYPE Release)
+	set(CMAKE_BUILD_TYPE Release)
 endif ()
 
 # Set output directories
@@ -39,7 +39,7 @@ set_target_properties(${PROJECT_NAME}
 
 #####################################
 # Define ALL_TARGETS variable to use in PVS and Sanitizers
-set (ALL_TARGETS ${PROJECT_NAME} ${LIB_NAME})
+set (ALL_TARGETS ${PROJECT_NAME})
 
 # Include fixed CMake configuration
 include(cmake/config.cmake)
