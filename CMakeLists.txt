@@ -11,11 +11,15 @@ set(ENABLE_PVS_STUDIO OFF)
 #! ENABLE_SANITIZERS is the option for the test builds!
 #  Definitely enable it while developing.
 #  Disable it for the production builds and before submitting for grading!
-set(ENABLE_SANITIZERS OFF) 
+set(ENABLE_SANITIZERS OFF)
+
+# !Warnings as errors should be imported here.
+# !Do not delete this line! switch it 'OFF' in case you don't need it.
+include(cmake/defaults/CompilerWarnings.cmake)
 
 #! Build release version if not specified otherwise.
 if (NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE Release)
+    set(CMAKE_BUILD_TYPE Release)
 endif ()
 
 # Set output directories
@@ -34,12 +38,12 @@ target_link_libraries(${PROJECT_NAME} Boost::program_options)
 
 # set output directory (bin)
 set_target_properties(${PROJECT_NAME}
-						PROPERTIES
-						RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 #####################################
 # Define ALL_TARGETS variable to use in PVS and Sanitizers
-set (ALL_TARGETS ${PROJECT_NAME})
+set(ALL_TARGETS ${PROJECT_NAME})
 
 # Include fixed CMake configuration
 include(cmake/config.cmake)
