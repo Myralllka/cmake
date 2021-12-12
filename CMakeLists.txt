@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.9)
 
 set(PROJECT_NAME test)
 project(${PROJECT_NAME} CXX)
@@ -12,6 +12,13 @@ set(ENABLE_PVS_STUDIO OFF)
 #  Definitely enable it while developing.
 #  Disable it for the production builds and before submitting for grading!
 set(ENABLE_SANITIZERS OFF)
+
+# Only one of Memory(MSAN), Address(ASAN), or Thread(TSan) sanitizers is applicable at the time
+set(ENABLE_UBSan ON)
+
+set(ENABLE_ASAN ON)
+set(ENABLE_TSan ON)
+set(ENABLE_MSAN OFF)
 
 # !Warnings as errors should be imported here.
 # !Do not delete this line! switch it 'OFF' in case you don't need it.
