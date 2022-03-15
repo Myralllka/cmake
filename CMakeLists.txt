@@ -1,30 +1,44 @@
 cmake_minimum_required(VERSION 3.9)
 
+#  It is used as a project's main executable name.
 set(PROJECT_NAME test)
 project(${PROJECT_NAME} CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
-# Options
+##########################################################
+# User configurable options of the template
+##########################################################
+# Note: symbols like WARNINGS_AS_ERRORS in configuration are intentionally variables
+# and not CMake options --using options creates too much problem for students.
+
+#! It is a good practice to set "WARNINGS_AS_ERRORS" ON,
 set(WARNINGS_AS_ERRORS ON)
-set(ENABLE_PVS_STUDIO OFF)
-#! ENABLE_SANITIZERS is the option for the test builds!
-#  Definitely enable it while developing.
-#  Disable it for the production builds and before submitting for grading!
-set(ENABLE_SANITIZERS OFF)
 
-# Only one of Memory(MSAN), Address(ASAN), or Thread(TSan) sanitizers is applicable at the time
+#! Always use PVS Studio while developing.
+set(ENABLE_PVS_STUDIO ON)
+
+#! Select appropriate sanitizers.
+#  Definitely enable sanitizers while developing.
+#  Disable it for the production builds and before submitting for grading.
+#  Only one of Memory (MSAN), Address (ASAN), or Thread (TSan)
+#  sanitizers is applicable at the time -- the first defined.
+
+#! UndefinedBehaviorSanitizer (UBSan)
+#  Info: https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
 set(ENABLE_UBSan ON)
-
+#! AddressSanitizer -- detects use after free or after scope exit,
+#  memory overflows and leaks.
+#  Info: https://github.com/google/sanitizers/wiki/AddressSanitizer
 set(ENABLE_ASAN ON)
-set(ENABLE_TSan ON)
+#! ThreadSanitizer -- detects data races.
+set(ENABLE_TSan OFF)
+#! MemorySanitizer detects uninitialized memory reads
+#  Info: https://github.com/google/sanitizers/wiki/MemorySanitizer
 set(ENABLE_MSAN OFF)
 
-# !Warnings as errors should be imported here.
-# !Do not delete this line! switch it 'OFF' in case you don't need it.
-include(cmake/defaults/CompilerWarnings.cmake)
 
-#! Build release version if not specified otherwise.
+#! Be default -- build release version if not specified otherwise.
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif ()
@@ -32,25 +46,33 @@ endif ()
 # Set output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 
-# Include headers
-include_directories(include)
+# Warnings as errors should be imported here -- do not move this line
+include(cmake/defaults/CompilerWarnings.cmake)
+
+##########################################################
+# Project files, packages, libraries and so on
+##########################################################
 
 # Project source compilation
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp
+        src/options_parser/options_parser.cpp)
+
+#! Put path to your project headers
+target_include_directories(${PROJECT_NAME} PRIVATE options_parser)
+
 
 # Add external packages
 find_package(Boost 1.71.0 COMPONENTS program_options REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} Boost::program_options)
 
-# set output directory (bin)
-set_target_properties(${PROJECT_NAME}
-        PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-#####################################
+##########################################################
+# Fixed CMakeLists.txt part
+##########################################################
+
 # Define ALL_TARGETS variable to use in PVS and Sanitizers
 set(ALL_TARGETS ${PROJECT_NAME})
 
-# Include fixed CMake configuration
+# Include CMake setup
 include(cmake/config.cmake)
